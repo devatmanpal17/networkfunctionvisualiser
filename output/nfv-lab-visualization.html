@@ -1,0 +1,270 @@
+<div id="nfv-lab-model">
+  <style>
+    #nfv-lab-model { width:100%; color:var(--foreground); font-family:inherit; }
+    #nfv-lab-model * { box-sizing:border-box; }
+    #nfv-lab-model .header { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+    #nfv-lab-model .brand { display:flex; align-items:center; gap:12px; }
+    #nfv-lab-model .brand > div { min-width:0; }
+    #nfv-lab-model .brand-mark { width:42px; height:42px; color:var(--viz-series-1); filter:drop-shadow(0 0 8px color-mix(in srgb,var(--viz-series-1) 55%,transparent)); }
+    #nfv-lab-model .header h1 { margin:0; letter-spacing:-.02em; }
+    #nfv-lab-model .eyebrow { display:flex; align-items:center; gap:7px; color:var(--viz-series-1); font-weight:500; margin-bottom:3px; }
+    #nfv-lab-model .live-dot { width:8px; height:8px; border-radius:50%; background:var(--viz-series-3); box-shadow:0 0 10px var(--viz-series-3); }
+    #nfv-lab-model .subtitle { color:var(--muted-foreground); margin-top:4px; }
+    #nfv-lab-model .metrics { margin-bottom:16px; }
+    #nfv-lab-model .viz-stat-value { display:flex; align-items:baseline; gap:4px; }
+    #nfv-lab-model .viz-stat small { color:var(--muted-foreground); }
+    #nfv-lab-model .metric-context { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; color:var(--muted-foreground); }
+    #nfv-lab-model .metric-context strong { color:var(--viz-series-3); font-weight:500; }
+    #nfv-lab-model .progress { margin-top:8px; }
+    #nfv-lab-model .throughput-progress .progress-bar { background:var(--viz-series-1); }
+    #nfv-lab-model .latency-progress .progress-bar { background:var(--viz-series-2); }
+    #nfv-lab-model .cpu-progress .progress-bar { background:var(--viz-series-3); }
+    #nfv-lab-model .stage-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:2px 0 10px; color:var(--muted-foreground); }
+    #nfv-lab-model .stage-title strong { color:var(--foreground); font-weight:500; letter-spacing:.04em; }
+    #nfv-lab-model .stage { position:relative; min-height:510px; overflow:hidden; border-top:1px solid var(--border); border-bottom:1px solid var(--border); background-image:linear-gradient(color-mix(in srgb,var(--border) 20%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--border) 20%,transparent) 1px,transparent 1px); background-size:28px 28px; }
+    #nfv-lab-model .plane-label { position:absolute; left:10px; z-index:3; color:var(--muted-foreground); font-weight:500; writing-mode:vertical-rl; transform:rotate(180deg); letter-spacing:.04em; }
+    #nfv-lab-model .plane-label.control { top:26px; }
+    #nfv-lab-model .plane-label.data { top:206px; }
+    #nfv-lab-model .plane-label.infra { top:408px; }
+    #nfv-lab-model .stage > svg { display:block; width:100%; height:auto; min-height:510px; }
+    #nfv-lab-model .mobile-diagram { display:none; }
+    #nfv-lab-model .zone { fill:var(--muted); opacity:.28; }
+    #nfv-lab-model .zone-line { stroke:var(--border); stroke-width:1; }
+    #nfv-lab-model .link { fill:none; stroke:var(--border); stroke-width:2; }
+    #nfv-lab-model .link.active { stroke:var(--viz-series-1); stroke-width:3; opacity:.58; filter:drop-shadow(0 0 5px color-mix(in srgb,var(--viz-series-1) 65%,transparent)); }
+    #nfv-lab-model .control-link { fill:none; stroke:var(--viz-series-2); stroke-width:1.5; stroke-dasharray:6 5; opacity:.8; }
+    #nfv-lab-model .node rect { fill:var(--card); stroke:var(--border); stroke-width:1.5; }
+    #nfv-lab-model .node.active rect { stroke:var(--viz-series-1); stroke-width:2.5; filter:drop-shadow(0 0 8px color-mix(in srgb,var(--viz-series-1) 35%,transparent)); }
+    #nfv-lab-model .node.failed rect { stroke:var(--destructive); stroke-width:2.5; }
+    #nfv-lab-model .node text { fill:var(--foreground); font-size:12px; text-anchor:middle; pointer-events:none; }
+    #nfv-lab-model .node .small { fill:var(--muted-foreground); font-size:11px; }
+    #nfv-lab-model .replica { fill:var(--viz-series-1); opacity:.2; stroke:var(--viz-series-1); }
+    #nfv-lab-model .packet { fill:var(--viz-series-1); stroke:var(--background); stroke-width:2; filter:drop-shadow(0 0 4px var(--viz-series-1)); }
+    #nfv-lab-model .packet.blocked { fill:var(--destructive); }
+    #nfv-lab-model .resource-track { fill:var(--muted); }
+    #nfv-lab-model .resource-fill { fill:var(--viz-series-3); }
+    #nfv-lab-model .resource-text { fill:var(--foreground); font-size:11px; }
+    #nfv-lab-model .legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; color:var(--muted-foreground); }
+    #nfv-lab-model .legend span { display:inline-flex; align-items:center; gap:6px; }
+    #nfv-lab-model .swatch { width:18px; height:3px; background:var(--viz-series-1); }
+    #nfv-lab-model .swatch.control { background:repeating-linear-gradient(90deg,var(--viz-series-2) 0 5px,transparent 5px 8px); }
+    #nfv-lab-model .swatch.resource { background:var(--viz-series-3); }
+    #nfv-lab-model .status { min-height:24px; margin-top:12px; color:var(--muted-foreground); display:flex; align-items:center; gap:8px; }
+    #nfv-lab-model .status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--viz-series-3); box-shadow:0 0 8px var(--viz-series-3); flex:0 0 auto; }
+    #nfv-lab-model .status.degraded::before { background:var(--destructive); box-shadow:0 0 8px var(--destructive); }
+    @media (max-width:560px) {
+      #nfv-lab-model .header { align-items:stretch; }
+      #nfv-lab-model .brand { align-items:flex-start; }
+      #nfv-lab-model .header h1, #nfv-lab-model .subtitle { white-space:normal !important; overflow-wrap:break-word; }
+      #nfv-lab-model .stage-title { align-items:flex-start; flex-direction:column; gap:3px; }
+      #nfv-lab-model .viz-controls { width:100%; display:grid; grid-template-columns:1fr; align-items:stretch; }
+      #nfv-lab-model .viz-controls > * { min-width:0; max-width:100%; }
+      #nfv-lab-model .viz-controls .btn { justify-self:start; }
+      #nfv-lab-model .viz-grid.metrics { display:grid; grid-template-columns:1fr !important; }
+      #nfv-lab-model .stage { min-height:730px; overflow:hidden; }
+      #nfv-lab-model .stage > .desktop-diagram { display:none; }
+      #nfv-lab-model .stage > .mobile-diagram { display:block; width:100% !important; min-width:100% !important; max-width:100% !important; height:auto !important; min-height:0 !important; }
+      #nfv-lab-model .plane-label { display:none; }
+    }
+    @media (prefers-reduced-motion:reduce) { #nfv-lab-model .packet { display:none; } }
+  </style>
+
+  <div class="header">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 42 13v22L24 45 6 35V13L24 3Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 17h18M15 24h18M15 31h18" stroke="currentColor" stroke-width="2"/><circle cx="15" cy="17" r="3" fill="currentColor"/><circle cx="33" cy="24" r="3" fill="currentColor"/><circle cx="15" cy="31" r="3" fill="currentColor"/></svg>
+      <div>
+        <div class="eyebrow text-small"><span class="live-dot"></span>LIVE LAB · NFV-01</div>
+        <h1>NFV service-chain observatory</h1>
+        <div class="subtitle">ETSI-aligned control, data and infrastructure planes</div>
+      </div>
+    </div>
+    <div class="viz-controls" aria-label="Simulation controls">
+      <label class="form-label">Traffic load <span id="load-value" class="tabular-nums">55%</span>
+        <input id="traffic-load" class="form-range" type="range" min="10" max="100" value="55" step="5">
+      </label>
+      <label class="form-check form-switch">
+        <input id="auto-scale" class="form-check-input" type="checkbox" checked>
+        <span class="form-check-label">Auto-scale</span>
+      </label>
+      <button id="failure-toggle" type="button" class="btn" aria-pressed="false">Inject vFirewall failure</button>
+    </div>
+  </div>
+
+  <div class="viz-grid metrics" aria-label="Live performance metrics">
+    <div class="card viz-stat"><div class="text-muted">Throughput</div><div class="viz-stat-value tabular-nums"><span id="throughput">5.1</span><small>Gbps</small></div><div class="progress throughput-progress" role="progressbar" aria-label="Throughput capacity" aria-valuemin="0" aria-valuemax="10" aria-valuenow="5.1"><div id="throughput-meter" class="progress-bar" style="width:51%"></div></div><div class="metric-context text-small"><span>Line capacity</span><strong id="throughput-health">Optimal</strong></div></div>
+    <div class="card viz-stat"><div class="text-muted">End-to-end latency</div><div class="viz-stat-value tabular-nums"><span id="latency">4.8</span><small>ms</small></div><div class="progress latency-progress" role="progressbar" aria-label="Latency relative to 20 milliseconds" aria-valuemin="0" aria-valuemax="20" aria-valuenow="4.8"><div id="latency-meter" class="progress-bar" style="width:24%"></div></div><div class="metric-context text-small"><span>SLA ceiling 20 ms</span><strong id="latency-health">Nominal</strong></div></div>
+    <div class="card viz-stat"><div class="text-muted">Compute utilization</div><div class="viz-stat-value tabular-nums"><span id="cpu">58</span><small>%</small></div><div class="progress cpu-progress" role="progressbar" aria-label="Compute utilization" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58"><div id="cpu-meter" class="progress-bar" style="width:58%"></div></div><div class="metric-context text-small"><span>Shared x86 pool</span><strong id="cpu-health">Balanced</strong></div></div>
+  </div>
+
+  <div class="stage-title text-small"><strong>LIVE SERVICE TOPOLOGY</strong><span id="chain-mode">AUTONOMOUS · 3 REPLICAS</span></div>
+
+  <div class="stage">
+    <div class="plane-label control">CONTROL PLANE</div>
+    <div class="plane-label data">DATA PLANE</div>
+    <div class="plane-label infra">NFVI</div>
+    <svg class="desktop-diagram" viewBox="0 0 900 510" role="img" aria-labelledby="nfv-title nfv-desc">
+      <title id="nfv-title">Interactive NFV service-chain architecture</title>
+      <desc id="nfv-desc">Traffic passes from clients through Open vSwitch, containerized firewall and load balancer functions, then reaches application servers. Ryu and MANO manage the chain over shared compute, network and storage.</desc>
+      <rect class="zone" x="38" y="12" width="850" height="154" rx="10"/>
+      <rect class="zone" x="38" y="178" width="850" height="214" rx="10"/>
+      <rect class="zone" x="38" y="404" width="850" height="92" rx="10"/>
+      <line class="zone-line" x1="38" y1="172" x2="888" y2="172"/>
+      <line class="zone-line" x1="38" y1="398" x2="888" y2="398"/>
+
+      <path class="control-link" d="M300 98 V205 M446 98 V205 M600 98 V205 M751 98 V205"/>
+      <path class="control-link" d="M372 66 H675"/>
+      <path class="link active" d="M132 275 H220 M324 275 H372 M484 275 H528 M640 275 H690"/>
+      <path class="link active" d="M790 275 H842"/>
+
+      <g class="node" transform="translate(232 38)"><rect width="136" height="60" rx="9"/><text x="68" y="25">Ryu SDN controller</text><text class="small" x="68" y="43">OpenFlow policy</text></g>
+      <g class="node" transform="translate(675 38)"><rect width="150" height="60" rx="9"/><text x="75" y="25">NFV MANO</text><text class="small" x="75" y="43">Orchestrate + scale</text></g>
+
+      <g class="node" transform="translate(52 239)"><rect width="80" height="72" rx="9"/><text x="40" y="31">Clients</text><text class="small" x="40" y="49">Traffic source</text></g>
+      <g class="node active" transform="translate(220 233)"><rect width="104" height="84" rx="9"/><text x="52" y="31">Open vSwitch</text><text class="small" x="52" y="50">SFC ingress</text><text class="small" x="52" y="67">10.0.0.1</text></g>
+      <g id="firewall-node" class="node active" transform="translate(372 225)"><rect width="112" height="100" rx="9"/><text x="56" y="30">vFirewall</text><text class="small" x="56" y="49">Docker cVNF</text><g id="fw-replicas"></g><text id="fw-count" class="small" x="56" y="84">2 replicas</text></g>
+      <g id="lb-node" class="node active" transform="translate(528 225)"><rect width="112" height="100" rx="9"/><text x="56" y="30">vLoadBalancer</text><text class="small" x="56" y="49">Docker cVNF</text><g id="lb-replicas"></g><text id="lb-count" class="small" x="56" y="84">2 replicas</text></g>
+      <g class="node" transform="translate(690 233)"><rect width="100" height="84" rx="9"/><text x="50" y="28">App servers</text><text class="small" x="50" y="48">srv-1 · srv-2</text><text class="small" x="50" y="66">srv-3</text></g>
+      <g class="node" transform="translate(842 239)"><rect width="36" height="72" rx="9"/><text x="18" y="31">✓</text><text class="small" x="18" y="50">sink</text></g>
+
+      <g aria-label="Shared NFVI resources">
+        <text class="resource-text" x="70" y="432">x86 compute</text><rect class="resource-track" x="70" y="445" width="220" height="12" rx="6"/><rect id="compute-bar" class="resource-fill" x="70" y="445" width="128" height="12" rx="6"/>
+        <text class="resource-text" x="340" y="432">Virtual switching</text><rect class="resource-track" x="340" y="445" width="220" height="12" rx="6"/><rect id="network-bar" class="resource-fill" x="340" y="445" width="116" height="12" rx="6"/>
+        <text class="resource-text" x="610" y="432">Container storage</text><rect class="resource-track" x="610" y="445" width="220" height="12" rx="6"/><rect id="storage-bar" class="resource-fill" x="610" y="445" width="72" height="12" rx="6"/>
+        <text class="resource-text" x="70" y="480">Ubuntu host · Mininet topology · Docker runtime · Open vSwitch datapath</text>
+      </g>
+
+      <g id="packets" aria-hidden="true"></g>
+    </svg>
+    <svg class="mobile-diagram" viewBox="0 0 440 680" role="img" aria-labelledby="nfv-mobile-title nfv-mobile-desc">
+      <title id="nfv-mobile-title">NFV service chain in a vertical mobile layout</title>
+      <desc id="nfv-mobile-desc">Ryu and MANO control a vertical chain from clients through Open vSwitch, a container firewall, a container load balancer and application servers on shared NFVI.</desc>
+      <rect class="zone" x="10" y="16" width="300" height="105" rx="10"/>
+      <text class="resource-text" x="24" y="38">CONTROL + ORCHESTRATION</text>
+      <g class="node" transform="translate(24 50)"><rect width="126" height="52" rx="8"/><text x="63" y="22">Ryu controller</text><text class="small" x="63" y="39">OpenFlow policy</text></g>
+      <g class="node" transform="translate(170 50)"><rect width="126" height="52" rx="8"/><text x="63" y="22">NFV MANO</text><text class="small" x="63" y="39">Scale + heal</text></g>
+      <path class="control-link" d="M87 102 V150 H160 M233 102 V150 H160"/>
+      <path class="control-link" d="M160 150 V186"/>
+      <rect class="zone" x="10" y="132" width="300" height="408" rx="10"/>
+      <text class="resource-text" x="24" y="157">SERVICE FUNCTION CHAIN</text>
+      <path class="link active" d="M160 212 V236 M160 298 V322 M160 384 V408 M160 470 V494"/>
+      <g class="node" transform="translate(97 174)"><rect width="126" height="38" rx="8"/><text x="63" y="24">Clients</text></g>
+      <g class="node active" transform="translate(97 236)"><rect width="126" height="62" rx="8"/><text x="63" y="24">Open vSwitch</text><text class="small" x="63" y="43">SFC ingress</text></g>
+      <g class="node active" transform="translate(97 322)"><rect width="126" height="62" rx="8"/><text x="63" y="24">vFirewall cVNF</text><text class="small" x="63" y="43">Docker replicas</text></g>
+      <g class="node active" transform="translate(97 408)"><rect width="126" height="62" rx="8"/><text x="63" y="24">vLoadBalancer</text><text class="small" x="63" y="43">Docker replicas</text></g>
+      <g class="node" transform="translate(97 494)"><rect width="126" height="38" rx="8"/><text x="63" y="24">Application pool</text></g>
+      <rect class="zone" x="10" y="552" width="300" height="112" rx="10"/>
+      <text class="resource-text" x="24" y="577">SHARED NFVI</text>
+      <text class="resource-text" x="24" y="603">x86 compute</text><rect class="resource-track" x="112" y="593" width="174" height="11" rx="5"/><rect class="resource-fill" x="112" y="593" width="102" height="11" rx="5"/>
+      <text class="resource-text" x="24" y="629">OVS network</text><rect class="resource-track" x="112" y="619" width="174" height="11" rx="5"/><rect class="resource-fill" x="112" y="619" width="92" height="11" rx="5"/>
+      <text class="resource-text" x="24" y="650">Mininet · Docker · Ubuntu host</text>
+    </svg>
+  </div>
+
+  <div class="legend text-small" aria-label="Diagram legend">
+    <span><i class="swatch"></i>Service-chain traffic</span>
+    <span><i class="swatch control"></i>Control and orchestration</span>
+    <span><i class="swatch resource"></i>NFVI resource utilization</span>
+  </div>
+  <div id="simulation-status" class="status text-small" aria-live="polite">Healthy chain · two cVNF replicas per function · packets flow client → firewall → load balancer → servers.</div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('nfv-lab-model');
+      const load = root.querySelector('#traffic-load');
+      const autoScale = root.querySelector('#auto-scale');
+      const failure = root.querySelector('#failure-toggle');
+      const packetLayer = root.querySelector('#packets');
+      let failed = false;
+      let animationId = 0;
+      const ns = 'http://www.w3.org/2000/svg';
+      const path = [[132,275],[220,275],[324,275],[372,275],[484,275],[528,275],[640,275],[690,275],[790,275],[842,275]];
+
+      function replicasFor(value) {
+        if (!autoScale.checked) return 1;
+        return value >= 80 ? 4 : value >= 55 ? 3 : 2;
+      }
+
+      function drawReplicas(id, count) {
+        const group = root.querySelector(id);
+        group.textContent = '';
+        const total = count * 13 - 3;
+        for (let i = 0; i < count; i++) {
+          const rect = document.createElementNS(ns, 'rect');
+          rect.setAttribute('class','replica'); rect.setAttribute('x', 56 - total/2 + i*13);
+          rect.setAttribute('y','61'); rect.setAttribute('width','10'); rect.setAttribute('height','8'); rect.setAttribute('rx','2');
+          group.appendChild(rect);
+        }
+      }
+
+      function update() {
+        const value = Number(load.value);
+        const replicas = replicasFor(value);
+        const effective = failed ? Math.max(1, replicas - 1) : replicas;
+        const capacity = effective * 30;
+        const congestion = Math.max(0, value - capacity);
+        const throughput = Math.max(0.4, value * 0.092 - congestion * 0.045 - (failed ? 0.7 : 0));
+        const latency = 2.4 + value * 0.035 + congestion * 0.16 + (failed ? 6.5 : 0);
+        const cpu = Math.min(98, Math.round(value / effective + 24));
+        root.querySelector('#load-value').textContent = value + '%';
+        root.querySelector('#throughput').textContent = throughput.toFixed(1);
+        root.querySelector('#latency').textContent = latency.toFixed(1);
+        root.querySelector('#cpu').textContent = cpu;
+        root.querySelector('#throughput-meter').style.width = Math.min(100, throughput * 10) + '%';
+        root.querySelector('#latency-meter').style.width = Math.min(100, latency * 5) + '%';
+        root.querySelector('#cpu-meter').style.width = cpu + '%';
+        root.querySelector('.throughput-progress').setAttribute('aria-valuenow', throughput.toFixed(1));
+        root.querySelector('.latency-progress').setAttribute('aria-valuenow', latency.toFixed(1));
+        root.querySelector('.cpu-progress').setAttribute('aria-valuenow', cpu);
+        root.querySelector('#throughput-health').textContent = throughput >= 7 ? 'High flow' : throughput >= 3 ? 'Optimal' : 'Constrained';
+        root.querySelector('#latency-health').textContent = latency < 8 ? 'Nominal' : latency < 15 ? 'Elevated' : 'SLA risk';
+        root.querySelector('#cpu-health').textContent = cpu < 65 ? 'Balanced' : cpu < 85 ? 'Busy' : 'Saturated';
+        root.querySelector('#compute-bar').setAttribute('width', Math.round(220 * cpu / 100));
+        root.querySelector('#network-bar').setAttribute('width', Math.round(220 * Math.min(96,value * .92) / 100));
+        root.querySelector('#storage-bar').setAttribute('width', Math.round(220 * (24 + replicas * 4) / 100));
+        drawReplicas('#fw-replicas', failed ? effective : replicas);
+        drawReplicas('#lb-replicas', replicas);
+        root.querySelector('#fw-count').textContent = (failed ? effective : replicas) + ((failed ? effective : replicas) === 1 ? ' replica' : ' replicas');
+        root.querySelector('#lb-count').textContent = replicas + (replicas === 1 ? ' replica' : ' replicas');
+        root.querySelector('#firewall-node').setAttribute('class', failed ? 'node failed' : 'node active');
+        failure.textContent = failed ? 'Restore vFirewall' : 'Inject vFirewall failure';
+        failure.setAttribute('aria-pressed', String(failed));
+        const mode = autoScale.checked ? 'MANO auto-scaling active' : 'fixed at one replica';
+        const health = failed ? 'Degraded chain · one vFirewall instance removed; traffic is rerouted through surviving capacity.' : 'Healthy chain';
+        const status = root.querySelector('#simulation-status');
+        status.textContent = health + ' · ' + mode + ' · ' + replicas + ' planned replica' + (replicas === 1 ? '' : 's') + ' per function.';
+        status.classList.toggle('degraded', failed);
+        root.querySelector('#chain-mode').textContent = (failed ? 'DEGRADED' : (autoScale.checked ? 'AUTONOMOUS' : 'MANUAL')) + ' · ' + replicas + ' REPLICA' + (replicas === 1 ? '' : 'S');
+      }
+
+      function pointAt(t) {
+        const scaled = t * (path.length - 1);
+        const i = Math.min(path.length - 2, Math.floor(scaled));
+        const f = scaled - i;
+        return [path[i][0] + (path[i+1][0]-path[i][0])*f, path[i][1] + (path[i+1][1]-path[i][1])*f];
+      }
+
+      function animate(time) {
+        const value = Number(load.value);
+        const count = Math.max(2, Math.round(value / 13));
+        while (packetLayer.children.length < count) {
+          const c = document.createElementNS(ns,'circle'); c.setAttribute('r','5'); c.setAttribute('class','packet'); packetLayer.appendChild(c);
+        }
+        while (packetLayer.children.length > count) packetLayer.lastChild.remove();
+        [...packetLayer.children].forEach((c,i) => {
+          let t = ((time * (0.000045 + value * 0.0000005)) + i/count) % 1;
+          if (failed && (i % 4 === 0) && t > .39) t = .39;
+          const p = pointAt(t); c.setAttribute('cx',p[0]); c.setAttribute('cy',p[1]);
+          c.setAttribute('class', failed && (i % 4 === 0) ? 'packet blocked' : 'packet');
+        });
+        animationId = requestAnimationFrame(animate);
+      }
+
+      load.addEventListener('input',update);
+      autoScale.addEventListener('change',update);
+      failure.addEventListener('click',() => { failed = !failed; update(); });
+      update();
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) animationId = requestAnimationFrame(animate);
+      window.addEventListener('pagehide', () => cancelAnimationFrame(animationId), {once:true});
+    })();
+  </script>
+</div>
