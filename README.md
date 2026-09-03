@@ -1,38 +1,28 @@
-# Network Function Visualiser
+# Arc Network Lab
 
-An interactive NFV (Network Function Virtualization) service-chain dashboard based on an ETSI-style architecture.
+Arc is a Python-backed NFV service-chain simulator with a restrained, product-focused interface. It models traffic through Open vSwitch, virtual firewall and load-balancer functions, application nodes, and shared NFVI resources.
 
-The model visualizes traffic flowing through:
+## Features
 
-- Client traffic sources
-- Open vSwitch service-chain ingress
-- Containerized vFirewall and vLoadBalancer VNFs
-- Application server pool
-- Ryu SDN control plane
-- NFV MANO orchestration
-- Shared compute, switching, and storage infrastructure
-
-## Interactive features
-
-- Adjustable traffic load
-- MANO-style automatic VNF scaling
-- vFirewall failure injection and recovery
-- Animated packet flow
-- Live throughput, latency, and compute-utilization metrics
-- Responsive desktop and mobile layouts
+- Live throughput, latency, availability, packet-loss, and infrastructure metrics
+- Three operating profiles with different autoscaling thresholds
+- MANO-style automatic scaling and manual replica control
+- Firewall failure injection, traffic rerouting, and service recovery
+- Server-side simulation state and an event timeline
+- Responsive light and dark interfaces
 
 ## Run locally
 
-Open `index.html` directly in a modern browser, or serve the repository:
-
 ```bash
-python -m http.server 8765
+python -m pip install -r requirements.txt
+python app.py
 ```
 
-Then visit `http://127.0.0.1:8765/`.
+Open `http://127.0.0.1:8765`.
 
-## Project files
+## Structure
 
-- `index.html` - standalone runnable dashboard
-- `output/nfv-lab-visualization.html` - editable visualization fragment
-- `output/running-model/index.html` - packaged standalone build
+- `app.py` — Flask application, simulation engine, and JSON API
+- `templates/index.html` — application interface
+- `static/styles.css` — visual system and responsive layout
+- `static/app.js` — API binding and interface interactions

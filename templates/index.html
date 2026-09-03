@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>Arc — Network Lab</title>
+  <meta name="description" content="A focused NFV service-chain simulation and observability workspace.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="#" aria-label="Arc network lab home">
+      <span class="brand-mark" aria-hidden="true">A</span><span>Arc</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <button class="nav-item active" data-view="overview">Overview</button>
+      <button class="nav-item" data-view="topology">Topology</button>
+      <button class="nav-item" data-view="activity">Activity</button>
+    </nav>
+    <div class="header-actions">
+      <span class="sync-state"><i></i> Live</span>
+      <button class="icon-button" id="theme-toggle" aria-label="Toggle dark mode" title="Appearance">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42M18.36 5.64l-1.42 1.42M7.06 16.94l-1.42 1.42M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" data-section="overview">
+      <div>
+        <p class="eyebrow">NETWORK FUNCTION LAB</p>
+        <h1>Everything flows.<br><span>See exactly how.</span></h1>
+        <p class="lede">Explore how policy, load, and failure shape a production NFV service chain—in real time.</p>
+      </div>
+      <div class="intro-status">
+        <div id="health-orb" class="health-orb"><span></span></div>
+        <div><strong id="system-label">All systems normal</strong><small id="system-detail">5 nodes · 9 active instances</small></div>
+      </div>
+    </section>
+
+    <section class="control-strip" aria-label="Simulation settings">
+      <div class="control-group traffic-control">
+        <div class="control-heading"><span>Traffic load</span><strong id="traffic-value">58%</strong></div>
+        <input id="traffic" type="range" min="10" max="100" step="1" value="58" aria-label="Traffic load">
+        <div class="range-labels"><span>Quiet</span><span>Peak</span></div>
+      </div>
+      <div class="divider"></div>
+      <div class="control-group profile-control">
+        <span class="control-label">Operating profile</span>
+        <div class="segmented" id="profile-picker" role="group" aria-label="Operating profile">
+          <button data-profile="balanced" class="selected">Balanced</button>
+          <button data-profile="latency">Low latency</button>
+          <button data-profile="efficiency">Efficiency</button>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <label class="toggle-row">
+        <span><b>Auto-scale</b><small>MANO policy</small></span>
+        <input id="autoscale" type="checkbox" checked><i class="toggle" aria-hidden="true"></i>
+      </label>
+    </section>
+
+    <section class="metrics" aria-label="Current performance">
+      <article class="metric primary-metric">
+        <p>Throughput</p>
+        <div><strong id="throughput">6.3</strong><span>Gbps</span></div>
+        <small id="throughput-note">63% of line capacity</small>
+        <div class="sparkline" id="throughput-chart" aria-hidden="true"></div>
+      </article>
+      <article class="metric">
+        <p>Latency</p>
+        <div><strong id="latency">4.1</strong><span>ms</span></div>
+        <small><i class="status-dot good"></i><span id="latency-note">Within 20 ms SLA</span></small>
+      </article>
+      <article class="metric">
+        <p>Availability</p>
+        <div><strong id="availability">99.99</strong><span>%</span></div>
+        <small><i class="status-dot good"></i><span id="availability-note">No active incidents</span></small>
+      </article>
+      <article class="metric">
+        <p>Packet loss</p>
+        <div><strong id="packet-loss">0.01</strong><span>%</span></div>
+        <small><i class="status-dot good"></i><span id="loss-note">Below policy threshold</span></small>
+      </article>
+    </section>
+
+    <section class="workspace" data-section="topology">
+      <div class="section-heading">
+        <div><p class="eyebrow">LIVE TOPOLOGY</p><h2>Service chain</h2></div>
+        <div class="section-actions">
+          <button class="quiet-button" id="replica-down" title="Remove one replica">−</button>
+          <span id="replica-label">3 replicas</span>
+          <button class="quiet-button" id="replica-up" title="Add one replica">+</button>
+          <button class="danger-button" id="failure-button">Simulate failure</button>
+        </div>
+      </div>
+
+      <div class="topology-wrap">
+        <div class="topology" id="topology" aria-label="Network service chain"></div>
+        <aside class="inspector">
+          <p class="eyebrow">INFRASTRUCTURE</p>
+          <h3>Shared NFVI</h3>
+          <div class="resource"><span><b>Compute</b><em id="cpu-value">49%</em></span><div><i id="cpu-bar"></i></div></div>
+          <div class="resource"><span><b>Memory</b><em id="memory-value">60%</em></span><div><i id="memory-bar"></i></div></div>
+          <div class="resource"><span><b>Network</b><em id="network-value">52%</em></span><div><i id="network-bar"></i></div></div>
+          <dl>
+            <div><dt>Controller</dt><dd>Ryu / OpenFlow 1.3</dd></div>
+            <div><dt>Runtime</dt><dd>Docker 27.1</dd></div>
+            <div><dt>Orchestrator</dt><dd>ETSI MANO</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section class="lower-grid" data-section="activity">
+      <article class="activity-panel">
+        <div class="section-heading compact"><div><p class="eyebrow">ACTIVITY</p><h2>What just happened</h2></div><span class="live-pill">Live</span></div>
+        <div id="event-list" class="event-list" aria-live="polite"></div>
+      </article>
+      <article class="policy-panel">
+        <p class="eyebrow">ACTIVE POLICY</p>
+        <h2 id="policy-name">Balanced</h2>
+        <p id="policy-description">General-purpose policy</p>
+        <div class="policy-rule"><span>If utilization exceeds</span><b id="policy-target">65%</b></div>
+        <div class="policy-rule"><span>Then add capacity</span><b>+1 replica</b></div>
+        <div class="policy-rule"><span>Cooldown period</span><b>30 seconds</b></div>
+        <div class="policy-footer"><span>Managed by MANO</span><i></i></div>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

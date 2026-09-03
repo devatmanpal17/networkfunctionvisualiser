@@ -6,3 +6,10 @@ tmp/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Python runtime and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
