@@ -16,6 +16,7 @@
     <nav aria-label="Primary navigation">
       <button class="nav-item active" data-view="overview">Overview</button>
       <button class="nav-item" data-view="topology">Topology</button>
+      <button class="nav-item" data-view="experiments">Experiments</button>
       <button class="nav-item" data-view="activity">Activity</button>
     </nav>
     <div class="header-actions">
@@ -96,14 +97,41 @@
         </div>
       </div>
 
+      <div class="experiment-bar" data-section="experiments">
+        <div class="experiment-copy"><span>Scenario lab</span><small>Apply controlled events to the live model</small></div>
+        <div class="scenario-buttons" role="group" aria-label="Simulation scenarios">
+          <button data-scenario="flash"><b>Flash crowd</b><small>94% legitimate load</small></button>
+          <button data-scenario="ddos"><b>DDoS attack</b><small>Rate-limit hostile flows</small></button>
+          <button data-scenario="link"><b>Path outage</b><small>Fail the primary VNF</small></button>
+          <button data-scenario="reset" class="reset-scenario"><b>Reset</b><small>Return to baseline</small></button>
+        </div>
+      </div>
+
       <div class="topology-wrap">
-        <div class="topology" id="topology" aria-label="Network service chain"></div>
+        <div class="topology-canvas">
+          <div class="plane-label">CONTROL PLANE</div>
+          <div class="control-plane" aria-label="Control and orchestration plane">
+            <div class="control-node"><i class="controller-icon">R</i><span><b>Ryu controller</b><small>12 OpenFlow rules</small></span></div>
+            <div class="control-link-label">policy + telemetry</div>
+            <div class="control-node"><i class="controller-icon">M</i><span><b>NFV MANO</b><small id="mano-state">Policy converged</small></span></div>
+          </div>
+          <div class="plane-separator"><span>DATA PLANE</span></div>
+          <div class="region-sources" id="region-sources" aria-label="Traffic regions"></div>
+          <div class="topology" id="topology" aria-label="Network service chain"></div>
+          <div class="selected-node-detail" id="selected-node-detail" aria-live="polite"></div>
+        </div>
         <aside class="inspector">
           <p class="eyebrow">INFRASTRUCTURE</p>
           <h3>Shared NFVI</h3>
           <div class="resource"><span><b>Compute</b><em id="cpu-value">49%</em></span><div><i id="cpu-bar"></i></div></div>
           <div class="resource"><span><b>Memory</b><em id="memory-value">60%</em></span><div><i id="memory-bar"></i></div></div>
           <div class="resource"><span><b>Network</b><em id="network-value">52%</em></span><div><i id="network-bar"></i></div></div>
+          <div class="infra-stats">
+            <div><span>Active flows</span><b id="active-flows">10,614</b></div>
+            <div><span>Queue depth</span><b id="queue-depth">4</b></div>
+            <div><span>Energy</span><b><em id="energy-value">176</em> W</b></div>
+            <div><span>Run rate</span><b>$<em id="cost-value">1.60</em>/hr</b></div>
+          </div>
           <dl>
             <div><dt>Controller</dt><dd>Ryu / OpenFlow 1.3</dd></div>
             <div><dt>Runtime</dt><dd>Docker 27.1</dd></div>
@@ -111,6 +139,32 @@
           </dl>
         </aside>
       </div>
+    </section>
+
+    <section class="analysis-grid" aria-label="Traffic and policy analysis">
+      <article class="traffic-panel">
+        <div class="analysis-heading"><div><p class="eyebrow">TRAFFIC ANALYSIS</p><h2>Protocol composition</h2></div><span id="flow-count">10,614 active flows</span></div>
+        <div class="traffic-composition">
+          <div class="donut" id="traffic-donut"><span><b>100%</b><small>inspected</small></span></div>
+          <div class="traffic-legend" id="traffic-legend"></div>
+        </div>
+        <div class="region-table" id="region-table"></div>
+      </article>
+      <article class="decision-panel">
+        <div class="analysis-heading"><div><p class="eyebrow">DECISION ENGINE</p><h2>Why the system acted</h2></div></div>
+        <label class="routing-control">Routing objective
+          <select id="routing-mode">
+            <option value="adaptive">Adaptive balance</option>
+            <option value="latency">Lowest latency</option>
+            <option value="cost">Lowest cost</option>
+          </select>
+        </label>
+        <div class="decision-list" id="decision-list"></div>
+        <div class="security-controls">
+          <label><span><b>TLS inspection</b><small>Decrypt at vFirewall</small></span><input id="encryption" type="checkbox" checked><i class="toggle"></i></label>
+          <label><span><b>Packet capture</b><small>Store diagnostic samples</small></span><input id="packet-capture" type="checkbox"><i class="toggle"></i></label>
+        </div>
+      </article>
     </section>
 
     <section class="lower-grid" data-section="activity">

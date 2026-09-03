@@ -23,6 +23,11 @@ class LabState:
     firewall_replicas: int = 3
     balancer_replicas: int = 3
     policy_target: int = 65
+    routing_mode: str = "adaptive"
+    encryption: bool = True
+    ddos_active: bool = False
+    capture_enabled: bool = False
+    selected_node: str = "firewall"
     tick: int = 0
 
 
@@ -63,12 +68,20 @@ def snapshot() -> dict:
         pressure = max(0, state.traffic - capacity)
         throughput = max(0.2, state.traffic * 0.109 - pressure * 0.055 - (0.9 if state.firewall_failed else 0))
         latency = 2.2 + state.traffic * 0.032 + pressure * 0.18 + (5.8 if state.firewall_failed else 0) + jitter * 0.08
-        packet_loss = max(0.01, pressure * 0.045 + (1.8 if state.firewall_failed else 0))
+        attack_pressure = 18 if state.ddos_active else 0
+        route_factor = {"adaptive": 0.82, "latency": 0.72, "cost": 1.08}[state.routing_mode]
+        packet_loss = max(0.01, pressure * 0.045 + (1.8 if state.firewall_failed else 0) + attack_pressure * 0.025)
         cpu = min(99, round(state.traffic / max(healthy_firewalls, 1) + 28 + jitter))
         memory = min(96, round(31 + state.firewall_replicas * 7 + state.traffic * 0.13))
         network = min(98, round(state.traffic * 0.91 + jitter))
+        latency = latency * route_factor + (1.4 if state.encryption else 0) + attack_pressure * .04
         availability = 99.99 if not state.firewall_failed else max(96.8, 99.4 - packet_loss)
-        status = "degraded" if state.firewall_failed or latency >= 12 else "healthy"
+        status = "degraded" if state.firewall_failed or state.ddos_active or latency >= 12 else "healthy"
+        active_flows = round((state.traffic * 183 + jitter * 14) * (1.22 if state.ddos_active else 1))
+        queue_depth = max(2, round(pressure * 8.4 + attack_pressure * 3 + random.uniform(0, 8)))
+        hourly_cost = round((state.firewall_replicas + state.balancer_replicas) * 0.19 + 0.46, 2)
+        energy = round(72 + cpu * 1.45 + state.balancer_replicas * 11, 0)
+        blocked_threats = round(48 + state.traffic * .7 + (740 if state.ddos_active else 0))
 
         return {
             **asdict(state),
@@ -79,9 +92,15 @@ def snapshot() -> dict:
                 "latency": round(latency, 1),
                 "packet_loss": round(packet_loss, 2),
                 "availability": round(availability, 2),
+                "p95_latency": round(latency * 1.42, 1),
                 "cpu": cpu,
                 "memory": memory,
                 "network": network,
+                "active_flows": active_flows,
+                "queue_depth": queue_depth,
+                "hourly_cost": hourly_cost,
+                "energy": energy,
+                "blocked_threats": blocked_threats,
             },
             "nodes": [
                 {"id": "edge", "name": "Edge", "detail": "12 sources", "status": "healthy", "replicas": 1},
@@ -92,6 +111,22 @@ def snapshot() -> dict:
             ],
             "events": list(events),
             "profiles": PROFILES,
+            "regions": [
+                {"name": "Mumbai", "code": "BOM", "share": 44, "latency": round(latency * .82, 1), "status": "healthy"},
+                {"name": "Singapore", "code": "SIN", "share": 34, "latency": round(latency * 1.08, 1), "status": "healthy"},
+                {"name": "Frankfurt", "code": "FRA", "share": 22, "latency": round(latency * 1.65, 1), "status": "degraded" if state.firewall_failed else "healthy"},
+            ],
+            "traffic_mix": [
+                {"name": "HTTPS", "value": 56, "color": "blue"},
+                {"name": "API", "value": 27, "color": "purple"},
+                {"name": "Streaming", "value": 12, "color": "green"},
+                {"name": "Other", "value": 5, "color": "gray"},
+            ],
+            "decisions": [
+                {"label": "Route selection", "value": state.routing_mode.title(), "reason": "Lowest weighted path score"},
+                {"label": "Scale decision", "value": f"{planned} replicas", "reason": f"Target utilization {state.policy_target}%"},
+                {"label": "Security action", "value": "Mitigating" if state.ddos_active else "Observe", "reason": f"{blocked_threats} threats blocked"},
+            ],
         }
 
 
@@ -158,6 +193,55 @@ def change_replicas():
         state.firewall_replicas = max(1, min(5, state.firewall_replicas + delta))
         state.balancer_replicas = max(1, min(5, state.balancer_replicas + delta))
         record("scale", "Capacity adjusted", f"Service functions set to {state.firewall_replicas} replicas")
+    return jsonify(snapshot())
+
+
+@app.post("/api/routing")
+def set_routing():
+    mode = request.get_json(force=True).get("mode", "adaptive")
+    if mode not in {"adaptive", "latency", "cost"}:
+        return jsonify({"error": "Unknown routing mode"}), 400
+    with state_lock:
+        state.routing_mode = mode
+        record("route", "Routing policy changed", f"Path selection now optimizes for {mode}")
+    return jsonify(snapshot())
+
+
+@app.post("/api/security")
+def set_security():
+    data = request.get_json(force=True)
+    with state_lock:
+        if "encryption" in data:
+            state.encryption = bool(data["encryption"])
+            record("security", "Encryption policy updated", "TLS inspection enabled" if state.encryption else "TLS inspection bypassed")
+        if "capture" in data:
+            state.capture_enabled = bool(data["capture"])
+            record("security", "Packet capture updated", "Diagnostic capture running" if state.capture_enabled else "Diagnostic capture stopped")
+    return jsonify(snapshot())
+
+
+@app.post("/api/scenario")
+def run_scenario():
+    scenario = request.get_json(force=True).get("scenario", "reset")
+    with state_lock:
+        if scenario == "flash":
+            state.traffic = 94
+            state.ddos_active = False
+            record("traffic", "Flash crowd detected", "Legitimate demand rose to 94%; scaling policy engaged")
+        elif scenario == "ddos":
+            state.traffic = 86
+            state.ddos_active = True
+            record("alert", "Volumetric attack detected", "Firewall rate limits and adaptive routing engaged")
+        elif scenario == "link":
+            state.firewall_failed = True
+            record("alert", "Primary service path lost", "Flows shifted to the surviving firewall replicas")
+        elif scenario == "reset":
+            state.traffic = PROFILES[state.profile]["traffic"]
+            state.ddos_active = False
+            state.firewall_failed = False
+            record("recovery", "Scenario cleared", "Traffic and service health returned to baseline")
+        else:
+            return jsonify({"error": "Unknown scenario"}), 400
     return jsonify(snapshot())
 
 

@@ -10,6 +10,7 @@ const icons = {
 };
 
 let currentState = null;
+let selectedNode = 'firewall';
 let chartValues = [42, 48, 45, 54, 52, 60, 57, 63, 59, 66, 62, 68];
 let pollTimer;
 let toastTimer;
@@ -33,12 +34,49 @@ function setText(id, value) {
 
 function renderTopology(nodes) {
   $('#topology').innerHTML = nodes.map((node, index) => `
-    <article class="node ${node.status === 'failed' ? 'failed' : ''} ${index === 2 ? 'selected' : ''}" aria-label="${node.name}, ${node.status}">
-      <div class="node-icon">${icons[node.id]}</div>
+    <article class="node ${node.status === 'failed' ? 'failed' : ''} ${node.id === selectedNode ? 'selected' : ''}" aria-label="${node.name}, ${node.status}">
+      <button class="node-icon" data-node="${node.id}" aria-label="Inspect ${node.name}">${icons[node.id]}</button>
       <strong class="node-name">${node.name}</strong>
       <span class="node-detail">${node.detail}</span>
       <div class="replicas" aria-label="${node.replicas} active instances">${'<i></i>'.repeat(node.replicas)}</div>
     </article>`).join('');
+  $$('.node-icon').forEach(button => button.addEventListener('click', () => {
+    selectedNode = button.dataset.node;
+    renderTopology(currentState.nodes);
+    renderSelectedNode(currentState.nodes.find(node => node.id === selectedNode));
+  }));
+}
+
+function renderSelectedNode(node) {
+  if (!node) return;
+  const roles = {
+    edge: ['Ingress gateway', '12 source peers', 'Anycast enabled'],
+    switch: ['Datapath', 'OpenFlow 1.3', '18 installed rules'],
+    firewall: ['Security VNF', 'TLS inspection', `${currentState.metrics.blocked_threats} threats blocked`],
+    balancer: ['Traffic VNF', currentState.routing_mode + ' routing', 'Least-loaded scheduling'],
+    apps: ['Service pool', '3 availability zones', 'Health checks passing']
+  };
+  $('#selected-node-detail').innerHTML = `<strong>${node.name}</strong>${roles[node.id].map(value => `<span>${value}</span>`).join('')}`;
+}
+
+function renderRegions(regions) {
+  $('#region-sources').innerHTML = regions.map(region => `<span class="region-chip ${region.status}"><i></i><b>${region.code}</b>${region.share}% · ${region.latency} ms</span>`).join('');
+  $('#region-table').innerHTML = regions.map(region => `<div class="region-row ${region.status}"><b><i></i>${region.name}</b><span>${region.share}% traffic</span><span>${region.latency} ms</span></div>`).join('');
+}
+
+function renderAnalysis(state) {
+  const colorMap = {blue: 'var(--blue)', purple: '#9b6dff', green: 'var(--green)', gray: 'var(--tertiary)'};
+  $('#traffic-legend').innerHTML = state.traffic_mix.map(item => `<div class="legend-item"><i style="--legend-color:${colorMap[item.color]}"></i><span>${item.name}</span><b>${item.value}%</b></div>`).join('');
+  $('#decision-list').innerHTML = state.decisions.map(item => `<div class="decision"><span>${item.label}</span><b>${item.value}</b><small>${item.reason}</small></div>`).join('');
+  $('#routing-mode').value = state.routing_mode;
+  $('#encryption').checked = state.encryption;
+  $('#packet-capture').checked = state.capture_enabled;
+  setText('flow-count', `${state.metrics.active_flows.toLocaleString()} active flows`);
+  setText('active-flows', state.metrics.active_flows.toLocaleString());
+  setText('queue-depth', state.metrics.queue_depth);
+  setText('energy-value', Math.round(state.metrics.energy));
+  setText('cost-value', state.metrics.hourly_cost.toFixed(2));
+  setText('mano-state', state.status === 'healthy' ? 'Policy converged' : 'Remediation active');
 }
 
 function renderEvents(events) {
@@ -100,6 +138,9 @@ function render(state, updateChart = true) {
   setText('policy-target', `${state.policy_target}%`);
 
   renderTopology(state.nodes);
+  renderSelectedNode(state.nodes.find(node => node.id === selectedNode));
+  renderRegions(state.regions);
+  renderAnalysis(state);
   renderEvents(state.events);
   if (updateChart) renderChart(m.throughput);
 }
@@ -135,6 +176,15 @@ $('#autoscale').addEventListener('change', event => update('/api/autoscale', {en
 $('#failure-button').addEventListener('click', () => update('/api/failure', {}, currentState?.firewall_failed ? 'Service restored' : 'Failure scenario running'));
 $('#replica-down').addEventListener('click', () => update('/api/replicas', {delta: -1}, 'Capacity reduced'));
 $('#replica-up').addEventListener('click', () => update('/api/replicas', {delta: 1}, 'Capacity increased'));
+
+$('#routing-mode').addEventListener('change', event => update('/api/routing', {mode: event.target.value}, `Routing now optimizes for ${event.target.value}`));
+$('#encryption').addEventListener('change', event => update('/api/security', {encryption: event.target.checked}, event.target.checked ? 'TLS inspection enabled' : 'TLS inspection bypassed'));
+$('#packet-capture').addEventListener('change', event => update('/api/security', {capture: event.target.checked}, event.target.checked ? 'Diagnostic capture started' : 'Diagnostic capture stopped'));
+
+$$('.scenario-buttons button').forEach(button => button.addEventListener('click', () => {
+  const labels = {flash: 'Flash crowd scenario applied', ddos: 'DDoS mitigation active', link: 'Path outage injected', reset: 'Lab returned to baseline'};
+  update('/api/scenario', {scenario: button.dataset.scenario}, labels[button.dataset.scenario]);
+}));
 
 $$('#profile-picker button').forEach(button => button.addEventListener('click', () => {
   update('/api/profile', {profile: button.dataset.profile}, `${button.textContent} profile applied`);
