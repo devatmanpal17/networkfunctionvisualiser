@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Nfv Lab Visualization</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Nfv Lab Visualization" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Nfv Lab Visualization&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: var(--border-radius-lg, 12.5px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress {
+  display: flex;
+  height: 6px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 6px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: 16px !important;
+  height: 16px !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;nfv-lab-model&quot;&gt;
+  &lt;style&gt;
+    #nfv-lab-model { width:100%; color:var(--foreground); font-family:inherit; }
+    #nfv-lab-model * { box-sizing:border-box; }
+    #nfv-lab-model .header { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+    #nfv-lab-model .brand { display:flex; align-items:center; gap:12px; }
+    #nfv-lab-model .brand &gt; div { min-width:0; }
+    #nfv-lab-model .brand-mark { width:42px; height:42px; color:var(--viz-series-1); filter:drop-shadow(0 0 8px color-mix(in srgb,var(--viz-series-1) 55%,transparent)); }
+    #nfv-lab-model .header h1 { margin:0; letter-spacing:-.02em; }
+    #nfv-lab-model .eyebrow { display:flex; align-items:center; gap:7px; color:var(--viz-series-1); font-weight:500; margin-bottom:3px; }
+    #nfv-lab-model .live-dot { width:8px; height:8px; border-radius:50%; background:var(--viz-series-3); box-shadow:0 0 10px var(--viz-series-3); }
+    #nfv-lab-model .subtitle { color:var(--muted-foreground); margin-top:4px; }
+    #nfv-lab-model .metrics { margin-bottom:16px; }
+    #nfv-lab-model .viz-stat-value { display:flex; align-items:baseline; gap:4px; }
+    #nfv-lab-model .viz-stat small { color:var(--muted-foreground); }
+    #nfv-lab-model .metric-context { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; color:var(--muted-foreground); }
+    #nfv-lab-model .metric-context strong { color:var(--viz-series-3); font-weight:500; }
+    #nfv-lab-model .progress { margin-top:8px; }
+    #nfv-lab-model .throughput-progress .progress-bar { background:var(--viz-series-1); }
+    #nfv-lab-model .latency-progress .progress-bar { background:var(--viz-series-2); }
+    #nfv-lab-model .cpu-progress .progress-bar { background:var(--viz-series-3); }
+    #nfv-lab-model .stage-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:2px 0 10px; color:var(--muted-foreground); }
+    #nfv-lab-model .stage-title strong { color:var(--foreground); font-weight:500; letter-spacing:.04em; }
+    #nfv-lab-model .stage { position:relative; min-height:510px; overflow:hidden; border-top:1px solid var(--border); border-bottom:1px solid var(--border); background-image:linear-gradient(color-mix(in srgb,var(--border) 20%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--border) 20%,transparent) 1px,transparent 1px); background-size:28px 28px; }
+    #nfv-lab-model .plane-label { position:absolute; left:10px; z-index:3; color:var(--muted-foreground); font-weight:500; writing-mode:vertical-rl; transform:rotate(180deg); letter-spacing:.04em; }
+    #nfv-lab-model .plane-label.control { top:26px; }
+    #nfv-lab-model .plane-label.data { top:206px; }
+    #nfv-lab-model .plane-label.infra { top:408px; }
+    #nfv-lab-model .stage &gt; svg { display:block; width:100%; height:auto; min-height:510px; }
+    #nfv-lab-model .mobile-diagram { display:none; }
+    #nfv-lab-model .zone { fill:var(--muted); opacity:.28; }
+    #nfv-lab-model .zone-line { stroke:var(--border); stroke-width:1; }
+    #nfv-lab-model .link { fill:none; stroke:var(--border); stroke-width:2; }
+    #nfv-lab-model .link.active { stroke:var(--viz-series-1); stroke-width:3; opacity:.58; filter:drop-shadow(0 0 5px color-mix(in srgb,var(--viz-series-1) 65%,transparent)); }
+    #nfv-lab-model .control-link { fill:none; stroke:var(--viz-series-2); stroke-width:1.5; stroke-dasharray:6 5; opacity:.8; }
+    #nfv-lab-model .node rect { fill:var(--card); stroke:var(--border); stroke-width:1.5; }
+    #nfv-lab-model .node.active rect { stroke:var(--viz-series-1); stroke-width:2.5; filter:drop-shadow(0 0 8px color-mix(in srgb,var(--viz-series-1) 35%,transparent)); }
+    #nfv-lab-model .node.failed rect { stroke:var(--destructive); stroke-width:2.5; }
+    #nfv-lab-model .node text { fill:var(--foreground); font-size:12px; text-anchor:middle; pointer-events:none; }
+    #nfv-lab-model .node .small { fill:var(--muted-foreground); font-size:11px; }
+    #nfv-lab-model .replica { fill:var(--viz-series-1); opacity:.2; stroke:var(--viz-series-1); }
+    #nfv-lab-model .packet { fill:var(--viz-series-1); stroke:var(--background); stroke-width:2; filter:drop-shadow(0 0 4px var(--viz-series-1)); }
+    #nfv-lab-model .packet.blocked { fill:var(--destructive); }
+    #nfv-lab-model .resource-track { fill:var(--muted); }
+    #nfv-lab-model .resource-fill { fill:var(--viz-series-3); }
+    #nfv-lab-model .resource-text { fill:var(--foreground); font-size:11px; }
+    #nfv-lab-model .legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; color:var(--muted-foreground); }
+    #nfv-lab-model .legend span { display:inline-flex; align-items:center; gap:6px; }
+    #nfv-lab-model .swatch { width:18px; height:3px; background:var(--viz-series-1); }
+    #nfv-lab-model .swatch.control { background:repeating-linear-gradient(90deg,var(--viz-series-2) 0 5px,transparent 5px 8px); }
+    #nfv-lab-model .swatch.resource { background:var(--viz-series-3); }
+    #nfv-lab-model .status { min-height:24px; margin-top:12px; color:var(--muted-foreground); display:flex; align-items:center; gap:8px; }
+    #nfv-lab-model .status::before { content:&quot;&quot;; width:8px; height:8px; border-radius:50%; background:var(--viz-series-3); box-shadow:0 0 8px var(--viz-series-3); flex:0 0 auto; }
+    #nfv-lab-model .status.degraded::before { background:var(--destructive); box-shadow:0 0 8px var(--destructive); }
+    @media (max-width:560px) {
+      #nfv-lab-model .header { align-items:stretch; }
+      #nfv-lab-model .brand { align-items:flex-start; }
+      #nfv-lab-model .header h1, #nfv-lab-model .subtitle { white-space:normal !important; overflow-wrap:break-word; }
+      #nfv-lab-model .stage-title { align-items:flex-start; flex-direction:column; gap:3px; }
+      #nfv-lab-model .viz-controls { width:100%; display:grid; grid-template-columns:1fr; align-items:stretch; }
+      #nfv-lab-model .viz-controls &gt; * { min-width:0; max-width:100%; }
+      #nfv-lab-model .viz-controls .btn { justify-self:start; }
+      #nfv-lab-model .viz-grid.metrics { display:grid; grid-template-columns:1fr !important; }
+      #nfv-lab-model .stage { min-height:730px; overflow:hidden; }
+      #nfv-lab-model .stage &gt; .desktop-diagram { display:none; }
+      #nfv-lab-model .stage &gt; .mobile-diagram { display:block; width:100% !important; min-width:100% !important; max-width:100% !important; height:auto !important; min-height:0 !important; }
+      #nfv-lab-model .plane-label { display:none; }
+    }
+    @media (prefers-reduced-motion:reduce) { #nfv-lab-model .packet { display:none; } }
+  &lt;/style&gt;
+
+  &lt;div class=&quot;header&quot;&gt;
+    &lt;div class=&quot;brand&quot;&gt;
+      &lt;svg class=&quot;brand-mark&quot; viewBox=&quot;0 0 48 48&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M24 3 42 13v22L24 45 6 35V13L24 3Z&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot;/&gt;&lt;path d=&quot;M15 17h18M15 24h18M15 31h18&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot;/&gt;&lt;circle cx=&quot;15&quot; cy=&quot;17&quot; r=&quot;3&quot; fill=&quot;currentColor&quot;/&gt;&lt;circle cx=&quot;33&quot; cy=&quot;24&quot; r=&quot;3&quot; fill=&quot;currentColor&quot;/&gt;&lt;circle cx=&quot;15&quot; cy=&quot;31&quot; r=&quot;3&quot; fill=&quot;currentColor&quot;/&gt;&lt;/svg&gt;
+      &lt;div&gt;
+        &lt;div class=&quot;eyebrow text-small&quot;&gt;&lt;span class=&quot;live-dot&quot;&gt;&lt;/span&gt;LIVE LAB · NFV-01&lt;/div&gt;
+        &lt;h1&gt;NFV service-chain observatory&lt;/h1&gt;
+        &lt;div class=&quot;subtitle&quot;&gt;ETSI-aligned control, data and infrastructure planes&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;viz-controls&quot; aria-label=&quot;Simulation controls&quot;&gt;
+      &lt;label class=&quot;form-label&quot;&gt;Traffic load &lt;span id=&quot;load-value&quot; class=&quot;tabular-nums&quot;&gt;55%&lt;/span&gt;
+        &lt;input id=&quot;traffic-load&quot; class=&quot;form-range&quot; type=&quot;range&quot; min=&quot;10&quot; max=&quot;100&quot; value=&quot;55&quot; step=&quot;5&quot;&gt;
+      &lt;/label&gt;
+      &lt;label class=&quot;form-check form-switch&quot;&gt;
+        &lt;input id=&quot;auto-scale&quot; class=&quot;form-check-input&quot; type=&quot;checkbox&quot; checked&gt;
+        &lt;span class=&quot;form-check-label&quot;&gt;Auto-scale&lt;/span&gt;
+      &lt;/label&gt;
+      &lt;button id=&quot;failure-toggle&quot; type=&quot;button&quot; class=&quot;btn&quot; aria-pressed=&quot;false&quot;&gt;Inject vFirewall failure&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;viz-grid metrics&quot; aria-label=&quot;Live performance metrics&quot;&gt;
+    &lt;div class=&quot;card viz-stat&quot;&gt;&lt;div class=&quot;text-muted&quot;&gt;Throughput&lt;/div&gt;&lt;div class=&quot;viz-stat-value tabular-nums&quot;&gt;&lt;span id=&quot;throughput&quot;&gt;5.1&lt;/span&gt;&lt;small&gt;Gbps&lt;/small&gt;&lt;/div&gt;&lt;div class=&quot;progress throughput-progress&quot; role=&quot;progressbar&quot; aria-label=&quot;Throughput capacity&quot; aria-valuemin=&quot;0&quot; aria-valuemax=&quot;10&quot; aria-valuenow=&quot;5.1&quot;&gt;&lt;div id=&quot;throughput-meter&quot; class=&quot;progress-bar&quot; style=&quot;width:51%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;metric-context text-small&quot;&gt;&lt;span&gt;Line capacity&lt;/span&gt;&lt;strong id=&quot;throughput-health&quot;&gt;Optimal&lt;/strong&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;card viz-stat&quot;&gt;&lt;div class=&quot;text-muted&quot;&gt;End-to-end latency&lt;/div&gt;&lt;div class=&quot;viz-stat-value tabular-nums&quot;&gt;&lt;span id=&quot;latency&quot;&gt;4.8&lt;/span&gt;&lt;small&gt;ms&lt;/small&gt;&lt;/div&gt;&lt;div class=&quot;progress latency-progress&quot; role=&quot;progressbar&quot; aria-label=&quot;Latency relative to 20 milliseconds&quot; aria-valuemin=&quot;0&quot; aria-valuemax=&quot;20&quot; aria-valuenow=&quot;4.8&quot;&gt;&lt;div id=&quot;latency-meter&quot; class=&quot;progress-bar&quot; style=&quot;width:24%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;metric-context text-small&quot;&gt;&lt;span&gt;SLA ceiling 20 ms&lt;/span&gt;&lt;strong id=&quot;latency-health&quot;&gt;Nominal&lt;/strong&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;card viz-stat&quot;&gt;&lt;div class=&quot;text-muted&quot;&gt;Compute utilization&lt;/div&gt;&lt;div class=&quot;viz-stat-value tabular-nums&quot;&gt;&lt;span id=&quot;cpu&quot;&gt;58&lt;/span&gt;&lt;small&gt;%&lt;/small&gt;&lt;/div&gt;&lt;div class=&quot;progress cpu-progress&quot; role=&quot;progressbar&quot; aria-label=&quot;Compute utilization&quot; aria-valuemin=&quot;0&quot; aria-valuemax=&quot;100&quot; aria-valuenow=&quot;58&quot;&gt;&lt;div id=&quot;cpu-meter&quot; class=&quot;progress-bar&quot; style=&quot;width:58%&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;metric-context text-small&quot;&gt;&lt;span&gt;Shared x86 pool&lt;/span&gt;&lt;strong id=&quot;cpu-health&quot;&gt;Balanced&lt;/strong&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;stage-title text-small&quot;&gt;&lt;strong&gt;LIVE SERVICE TOPOLOGY&lt;/strong&gt;&lt;span id=&quot;chain-mode&quot;&gt;AUTONOMOUS · 3 REPLICAS&lt;/span&gt;&lt;/div&gt;
+
+  &lt;div class=&quot;stage&quot;&gt;
+    &lt;div class=&quot;plane-label control&quot;&gt;CONTROL PLANE&lt;/div&gt;
+    &lt;div class=&quot;plane-label data&quot;&gt;DATA PLANE&lt;/div&gt;
+    &lt;div class=&quot;plane-label infra&quot;&gt;NFVI&lt;/div&gt;
+    &lt;svg class=&quot;desktop-diagram&quot; viewBox=&quot;0 0 900 510&quot; role=&quot;img&quot; aria-labelledby=&quot;nfv-title nfv-desc&quot;&gt;
+      &lt;title id=&quot;nfv-title&quot;&gt;Interactive NFV service-chain architecture&lt;/title&gt;
+      &lt;desc id=&quot;nfv-desc&quot;&gt;Traffic passes from clients through Open vSwitch, containerized firewall and load balancer functions, then reaches application servers. Ryu and MANO manage the chain over shared compute, network and storage.&lt;/desc&gt;
+      &lt;rect class=&quot;zone&quot; x=&quot;38&quot; y=&quot;12&quot; width=&quot;850&quot; height=&quot;154&quot; rx=&quot;10&quot;/&gt;
+      &lt;rect class=&quot;zone&quot; x=&quot;38&quot; y=&quot;178&quot; width=&quot;850&quot; height=&quot;214&quot; rx=&quot;10&quot;/&gt;
+      &lt;rect class=&quot;zone&quot; x=&quot;38&quot; y=&quot;404&quot; width=&quot;850&quot; height=&quot;92&quot; rx=&quot;10&quot;/&gt;
+      &lt;line class=&quot;zone-line&quot; x1=&quot;38&quot; y1=&quot;172&quot; x2=&quot;888&quot; y2=&quot;172&quot;/&gt;
+      &lt;line class=&quot;zone-line&quot; x1=&quot;38&quot; y1=&quot;398&quot; x2=&quot;888&quot; y2=&quot;398&quot;/&gt;
+
+      &lt;path class=&quot;control-link&quot; d=&quot;M300 98 V205 M446 98 V205 M600 98 V205 M751 98 V205&quot;/&gt;
+      &lt;path class=&quot;control-link&quot; d=&quot;M372 66 H675&quot;/&gt;
+      &lt;path class=&quot;link active&quot; d=&quot;M132 275 H220 M324 275 H372 M484 275 H528 M640 275 H690&quot;/&gt;
+      &lt;path class=&quot;link active&quot; d=&quot;M790 275 H842&quot;/&gt;
+
+      &lt;g class=&quot;node&quot; transform=&quot;translate(232 38)&quot;&gt;&lt;rect width=&quot;136&quot; height=&quot;60&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;68&quot; y=&quot;25&quot;&gt;Ryu SDN controller&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;68&quot; y=&quot;43&quot;&gt;OpenFlow policy&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node&quot; transform=&quot;translate(675 38)&quot;&gt;&lt;rect width=&quot;150&quot; height=&quot;60&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;75&quot; y=&quot;25&quot;&gt;NFV MANO&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;75&quot; y=&quot;43&quot;&gt;Orchestrate + scale&lt;/text&gt;&lt;/g&gt;
+
+      &lt;g class=&quot;node&quot; transform=&quot;translate(52 239)&quot;&gt;&lt;rect width=&quot;80&quot; height=&quot;72&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;40&quot; y=&quot;31&quot;&gt;Clients&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;40&quot; y=&quot;49&quot;&gt;Traffic source&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node active&quot; transform=&quot;translate(220 233)&quot;&gt;&lt;rect width=&quot;104&quot; height=&quot;84&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;52&quot; y=&quot;31&quot;&gt;Open vSwitch&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;52&quot; y=&quot;50&quot;&gt;SFC ingress&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;52&quot; y=&quot;67&quot;&gt;10.0.0.1&lt;/text&gt;&lt;/g&gt;
+      &lt;g id=&quot;firewall-node&quot; class=&quot;node active&quot; transform=&quot;translate(372 225)&quot;&gt;&lt;rect width=&quot;112&quot; height=&quot;100&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;56&quot; y=&quot;30&quot;&gt;vFirewall&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;56&quot; y=&quot;49&quot;&gt;Docker cVNF&lt;/text&gt;&lt;g id=&quot;fw-replicas&quot;&gt;&lt;/g&gt;&lt;text id=&quot;fw-count&quot; class=&quot;small&quot; x=&quot;56&quot; y=&quot;84&quot;&gt;2 replicas&lt;/text&gt;&lt;/g&gt;
+      &lt;g id=&quot;lb-node&quot; class=&quot;node active&quot; transform=&quot;translate(528 225)&quot;&gt;&lt;rect width=&quot;112&quot; height=&quot;100&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;56&quot; y=&quot;30&quot;&gt;vLoadBalancer&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;56&quot; y=&quot;49&quot;&gt;Docker cVNF&lt;/text&gt;&lt;g id=&quot;lb-replicas&quot;&gt;&lt;/g&gt;&lt;text id=&quot;lb-count&quot; class=&quot;small&quot; x=&quot;56&quot; y=&quot;84&quot;&gt;2 replicas&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node&quot; transform=&quot;translate(690 233)&quot;&gt;&lt;rect width=&quot;100&quot; height=&quot;84&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;50&quot; y=&quot;28&quot;&gt;App servers&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;50&quot; y=&quot;48&quot;&gt;srv-1 · srv-2&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;50&quot; y=&quot;66&quot;&gt;srv-3&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node&quot; transform=&quot;translate(842 239)&quot;&gt;&lt;rect width=&quot;36&quot; height=&quot;72&quot; rx=&quot;9&quot;/&gt;&lt;text x=&quot;18&quot; y=&quot;31&quot;&gt;✓&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;18&quot; y=&quot;50&quot;&gt;sink&lt;/text&gt;&lt;/g&gt;
+
+      &lt;g aria-label=&quot;Shared NFVI resources&quot;&gt;
+        &lt;text class=&quot;resource-text&quot; x=&quot;70&quot; y=&quot;432&quot;&gt;x86 compute&lt;/text&gt;&lt;rect class=&quot;resource-track&quot; x=&quot;70&quot; y=&quot;445&quot; width=&quot;220&quot; height=&quot;12&quot; rx=&quot;6&quot;/&gt;&lt;rect id=&quot;compute-bar&quot; class=&quot;resource-fill&quot; x=&quot;70&quot; y=&quot;445&quot; width=&quot;128&quot; height=&quot;12&quot; rx=&quot;6&quot;/&gt;
+        &lt;text class=&quot;resource-text&quot; x=&quot;340&quot; y=&quot;432&quot;&gt;Virtual switching&lt;/text&gt;&lt;rect class=&quot;resource-track&quot; x=&quot;340&quot; y=&quot;445&quot; width=&quot;220&quot; height=&quot;12&quot; rx=&quot;6&quot;/&gt;&lt;rect id=&quot;network-bar&quot; class=&quot;resource-fill&quot; x=&quot;340&quot; y=&quot;445&quot; width=&quot;116&quot; height=&quot;12&quot; rx=&quot;6&quot;/&gt;
+        &lt;text class=&quot;resource-text&quot; x=&quot;610&quot; y=&quot;432&quot;&gt;Container storage&lt;/text&gt;&lt;rect class=&quot;resource-track&quot; x=&quot;610&quot; y=&quot;445&quot; width=&quot;220&quot; height=&quot;12&quot; rx=&quot;6&quot;/&gt;&lt;rect id=&quot;storage-bar&quot; class=&quot;resource-fill&quot; x=&quot;610&quot; y=&quot;445&quot; width=&quot;72&quot; height=&quot;12&quot; rx=&quot;6&quot;/&gt;
+        &lt;text class=&quot;resource-text&quot; x=&quot;70&quot; y=&quot;480&quot;&gt;Ubuntu host · Mininet topology · Docker runtime · Open vSwitch datapath&lt;/text&gt;
+      &lt;/g&gt;
+
+      &lt;g id=&quot;packets&quot; aria-hidden=&quot;true&quot;&gt;&lt;/g&gt;
+    &lt;/svg&gt;
+    &lt;svg class=&quot;mobile-diagram&quot; viewBox=&quot;0 0 440 680&quot; role=&quot;img&quot; aria-labelledby=&quot;nfv-mobile-title nfv-mobile-desc&quot;&gt;
+      &lt;title id=&quot;nfv-mobile-title&quot;&gt;NFV service chain in a vertical mobile layout&lt;/title&gt;
+      &lt;desc id=&quot;nfv-mobile-desc&quot;&gt;Ryu and MANO control a vertical chain from clients through Open vSwitch, a container firewall, a container load balancer and application servers on shared NFVI.&lt;/desc&gt;
+      &lt;rect class=&quot;zone&quot; x=&quot;10&quot; y=&quot;16&quot; width=&quot;300&quot; height=&quot;105&quot; rx=&quot;10&quot;/&gt;
+      &lt;text class=&quot;resource-text&quot; x=&quot;24&quot; y=&quot;38&quot;&gt;CONTROL + ORCHESTRATION&lt;/text&gt;
+      &lt;g class=&quot;node&quot; transform=&quot;translate(24 50)&quot;&gt;&lt;rect width=&quot;126&quot; height=&quot;52&quot; rx=&quot;8&quot;/&gt;&lt;text x=&quot;63&quot; y=&quot;22&quot;&gt;Ryu controller&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;63&quot; y=&quot;39&quot;&gt;OpenFlow policy&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node&quot; transform=&quot;translate(170 50)&quot;&gt;&lt;rect width=&quot;126&quot; height=&quot;52&quot; rx=&quot;8&quot;/&gt;&lt;text x=&quot;63&quot; y=&quot;22&quot;&gt;NFV MANO&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;63&quot; y=&quot;39&quot;&gt;Scale + heal&lt;/text&gt;&lt;/g&gt;
+      &lt;path class=&quot;control-link&quot; d=&quot;M87 102 V150 H160 M233 102 V150 H160&quot;/&gt;
+      &lt;path class=&quot;control-link&quot; d=&quot;M160 150 V186&quot;/&gt;
+      &lt;rect class=&quot;zone&quot; x=&quot;10&quot; y=&quot;132&quot; width=&quot;300&quot; height=&quot;408&quot; rx=&quot;10&quot;/&gt;
+      &lt;text class=&quot;resource-text&quot; x=&quot;24&quot; y=&quot;157&quot;&gt;SERVICE FUNCTION CHAIN&lt;/text&gt;
+      &lt;path class=&quot;link active&quot; d=&quot;M160 212 V236 M160 298 V322 M160 384 V408 M160 470 V494&quot;/&gt;
+      &lt;g class=&quot;node&quot; transform=&quot;translate(97 174)&quot;&gt;&lt;rect width=&quot;126&quot; height=&quot;38&quot; rx=&quot;8&quot;/&gt;&lt;text x=&quot;63&quot; y=&quot;24&quot;&gt;Clients&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node active&quot; transform=&quot;translate(97 236)&quot;&gt;&lt;rect width=&quot;126&quot; height=&quot;62&quot; rx=&quot;8&quot;/&gt;&lt;text x=&quot;63&quot; y=&quot;24&quot;&gt;Open vSwitch&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;63&quot; y=&quot;43&quot;&gt;SFC ingress&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node active&quot; transform=&quot;translate(97 322)&quot;&gt;&lt;rect width=&quot;126&quot; height=&quot;62&quot; rx=&quot;8&quot;/&gt;&lt;text x=&quot;63&quot; y=&quot;24&quot;&gt;vFirewall cVNF&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;63&quot; y=&quot;43&quot;&gt;Docker replicas&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node active&quot; transform=&quot;translate(97 408)&quot;&gt;&lt;rect width=&quot;126&quot; height=&quot;62&quot; rx=&quot;8&quot;/&gt;&lt;text x=&quot;63&quot; y=&quot;24&quot;&gt;vLoadBalancer&lt;/text&gt;&lt;text class=&quot;small&quot; x=&quot;63&quot; y=&quot;43&quot;&gt;Docker replicas&lt;/text&gt;&lt;/g&gt;
+      &lt;g class=&quot;node&quot; transform=&quot;translate(97 494)&quot;&gt;&lt;rect width=&quot;126&quot; height=&quot;38&quot; rx=&quot;8&quot;/&gt;&lt;text x=&quot;63&quot; y=&quot;24&quot;&gt;Application pool&lt;/text&gt;&lt;/g&gt;
+      &lt;rect class=&quot;zone&quot; x=&quot;10&quot; y=&quot;552&quot; width=&quot;300&quot; height=&quot;112&quot; rx=&quot;10&quot;/&gt;
+      &lt;text class=&quot;resource-text&quot; x=&quot;24&quot; y=&quot;577&quot;&gt;SHARED NFVI&lt;/text&gt;
+      &lt;text class=&quot;resource-text&quot; x=&quot;24&quot; y=&quot;603&quot;&gt;x86 compute&lt;/text&gt;&lt;rect class=&quot;resource-track&quot; x=&quot;112&quot; y=&quot;593&quot; width=&quot;174&quot; height=&quot;11&quot; rx=&quot;5&quot;/&gt;&lt;rect class=&quot;resource-fill&quot; x=&quot;112&quot; y=&quot;593&quot; width=&quot;102&quot; height=&quot;11&quot; rx=&quot;5&quot;/&gt;
+      &lt;text class=&quot;resource-text&quot; x=&quot;24&quot; y=&quot;629&quot;&gt;OVS network&lt;/text&gt;&lt;rect class=&quot;resource-track&quot; x=&quot;112&quot; y=&quot;619&quot; width=&quot;174&quot; height=&quot;11&quot; rx=&quot;5&quot;/&gt;&lt;rect class=&quot;resource-fill&quot; x=&quot;112&quot; y=&quot;619&quot; width=&quot;92&quot; height=&quot;11&quot; rx=&quot;5&quot;/&gt;
+      &lt;text class=&quot;resource-text&quot; x=&quot;24&quot; y=&quot;650&quot;&gt;Mininet · Docker · Ubuntu host&lt;/text&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;legend text-small&quot; aria-label=&quot;Diagram legend&quot;&gt;
+    &lt;span&gt;&lt;i class=&quot;swatch&quot;&gt;&lt;/i&gt;Service-chain traffic&lt;/span&gt;
+    &lt;span&gt;&lt;i class=&quot;swatch control&quot;&gt;&lt;/i&gt;Control and orchestration&lt;/span&gt;
+    &lt;span&gt;&lt;i class=&quot;swatch resource&quot;&gt;&lt;/i&gt;NFVI resource utilization&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;simulation-status&quot; class=&quot;status text-small&quot; aria-live=&quot;polite&quot;&gt;Healthy chain · two cVNF replicas per function · packets flow client → firewall → load balancer → servers.&lt;/div&gt;
+
+  &lt;script&gt;
+    (() =&gt; {
+      const root = document.getElementById(&#x27;nfv-lab-model&#x27;);
+      const load = root.querySelector(&#x27;#traffic-load&#x27;);
+      const autoScale = root.querySelector(&#x27;#auto-scale&#x27;);
+      const failure = root.querySelector(&#x27;#failure-toggle&#x27;);
+      const packetLayer = root.querySelector(&#x27;#packets&#x27;);
+      let failed = false;
+      let animationId = 0;
+      const ns = &#x27;http://www.w3.org/2000/svg&#x27;;
+      const path = [[132,275],[220,275],[324,275],[372,275],[484,275],[528,275],[640,275],[690,275],[790,275],[842,275]];
+
+      function replicasFor(value) {
+        if (!autoScale.checked) return 1;
+        return value &gt;= 80 ? 4 : value &gt;= 55 ? 3 : 2;
+      }
+
+      function drawReplicas(id, count) {
+        const group = root.querySelector(id);
+        group.textContent = &#x27;&#x27;;
+        const total = count * 13 - 3;
+        for (let i = 0; i &lt; count; i++) {
+          const rect = document.createElementNS(ns, &#x27;rect&#x27;);
+          rect.setAttribute(&#x27;class&#x27;,&#x27;replica&#x27;); rect.setAttribute(&#x27;x&#x27;, 56 - total/2 + i*13);
+          rect.setAttribute(&#x27;y&#x27;,&#x27;61&#x27;); rect.setAttribute(&#x27;width&#x27;,&#x27;10&#x27;); rect.setAttribute(&#x27;height&#x27;,&#x27;8&#x27;); rect.setAttribute(&#x27;rx&#x27;,&#x27;2&#x27;);
+          group.appendChild(rect);
+        }
+      }
+
+      function update() {
+        const value = Number(load.value);
+        const replicas = replicasFor(value);
+        const effective = failed ? Math.max(1, replicas - 1) : replicas;
+        const capacity = effective * 30;
+        const congestion = Math.max(0, value - capacity);
+        const throughput = Math.max(0.4, value * 0.092 - congestion * 0.045 - (failed ? 0.7 : 0));
+        const latency = 2.4 + value * 0.035 + congestion * 0.16 + (failed ? 6.5 : 0);
+        const cpu = Math.min(98, Math.round(value / effective + 24));
+        root.querySelector(&#x27;#load-value&#x27;).textContent = value + &#x27;%&#x27;;
+        root.querySelector(&#x27;#throughput&#x27;).textContent = throughput.toFixed(1);
+        root.querySelector(&#x27;#latency&#x27;).textContent = latency.toFixed(1);
+        root.querySelector(&#x27;#cpu&#x27;).textContent = cpu;
+        root.querySelector(&#x27;#throughput-meter&#x27;).style.width = Math.min(100, throughput * 10) + &#x27;%&#x27;;
+        root.querySelector(&#x27;#latency-meter&#x27;).style.width = Math.min(100, latency * 5) + &#x27;%&#x27;;
+        root.querySelector(&#x27;#cpu-meter&#x27;).style.width = cpu + &#x27;%&#x27;;
+        root.querySelector(&#x27;.throughput-progress&#x27;).setAttribute(&#x27;aria-valuenow&#x27;, throughput.toFixed(1));
+        root.querySelector(&#x27;.latency-progress&#x27;).setAttribute(&#x27;aria-valuenow&#x27;, latency.toFixed(1));
+        root.querySelector(&#x27;.cpu-progress&#x27;).setAttribute(&#x27;aria-valuenow&#x27;, cpu);
+        root.querySelector(&#x27;#throughput-health&#x27;).textContent = throughput &gt;= 7 ? &#x27;High flow&#x27; : throughput &gt;= 3 ? &#x27;Optimal&#x27; : &#x27;Constrained&#x27;;
+        root.querySelector(&#x27;#latency-health&#x27;).textContent = latency &lt; 8 ? &#x27;Nominal&#x27; : latency &lt; 15 ? &#x27;Elevated&#x27; : &#x27;SLA risk&#x27;;
+        root.querySelector(&#x27;#cpu-health&#x27;).textContent = cpu &lt; 65 ? &#x27;Balanced&#x27; : cpu &lt; 85 ? &#x27;Busy&#x27; : &#x27;Saturated&#x27;;
+        root.querySelector(&#x27;#compute-bar&#x27;).setAttribute(&#x27;width&#x27;, Math.round(220 * cpu / 100));
+        root.querySelector(&#x27;#network-bar&#x27;).setAttribute(&#x27;width&#x27;, Math.round(220 * Math.min(96,value * .92) / 100));
+        root.querySelector(&#x27;#storage-bar&#x27;).setAttribute(&#x27;width&#x27;, Math.round(220 * (24 + replicas * 4) / 100));
+        drawReplicas(&#x27;#fw-replicas&#x27;, failed ? effective : replicas);
+        drawReplicas(&#x27;#lb-replicas&#x27;, replicas);
+        root.querySelector(&#x27;#fw-count&#x27;).textContent = (failed ? effective : replicas) + ((failed ? effective : replicas) === 1 ? &#x27; replica&#x27; : &#x27; replicas&#x27;);
+        root.querySelector(&#x27;#lb-count&#x27;).textContent = replicas + (replicas === 1 ? &#x27; replica&#x27; : &#x27; replicas&#x27;);
+        root.querySelector(&#x27;#firewall-node&#x27;).setAttribute(&#x27;class&#x27;, failed ? &#x27;node failed&#x27; : &#x27;node active&#x27;);
+        failure.textContent = failed ? &#x27;Restore vFirewall&#x27; : &#x27;Inject vFirewall failure&#x27;;
+        failure.setAttribute(&#x27;aria-pressed&#x27;, String(failed));
+        const mode = autoScale.checked ? &#x27;MANO auto-scaling active&#x27; : &#x27;fixed at one replica&#x27;;
+        const health = failed ? &#x27;Degraded chain · one vFirewall instance removed; traffic is rerouted through surviving capacity.&#x27; : &#x27;Healthy chain&#x27;;
+        const status = root.querySelector(&#x27;#simulation-status&#x27;);
+        status.textContent = health + &#x27; · &#x27; + mode + &#x27; · &#x27; + replicas + &#x27; planned replica&#x27; + (replicas === 1 ? &#x27;&#x27; : &#x27;s&#x27;) + &#x27; per function.&#x27;;
+        status.classList.toggle(&#x27;degraded&#x27;, failed);
+        root.querySelector(&#x27;#chain-mode&#x27;).textContent = (failed ? &#x27;DEGRADED&#x27; : (autoScale.checked ? &#x27;AUTONOMOUS&#x27; : &#x27;MANUAL&#x27;)) + &#x27; · &#x27; + replicas + &#x27; REPLICA&#x27; + (replicas === 1 ? &#x27;&#x27; : &#x27;S&#x27;);
+      }
+
+      function pointAt(t) {
+        const scaled = t * (path.length - 1);
+        const i = Math.min(path.length - 2, Math.floor(scaled));
+        const f = scaled - i;
+        return [path[i][0] + (path[i+1][0]-path[i][0])*f, path[i][1] + (path[i+1][1]-path[i][1])*f];
+      }
+
+      function animate(time) {
+        const value = Number(load.value);
+        const count = Math.max(2, Math.round(value / 13));
+        while (packetLayer.children.length &lt; count) {
+          const c = document.createElementNS(ns,&#x27;circle&#x27;); c.setAttribute(&#x27;r&#x27;,&#x27;5&#x27;); c.setAttribute(&#x27;class&#x27;,&#x27;packet&#x27;); packetLayer.appendChild(c);
+        }
+        while (packetLayer.children.length &gt; count) packetLayer.lastChild.remove();
+        [...packetLayer.children].forEach((c,i) =&gt; {
+          let t = ((time * (0.000045 + value * 0.0000005)) + i/count) % 1;
+          if (failed &amp;&amp; (i % 4 === 0) &amp;&amp; t &gt; .39) t = .39;
+          const p = pointAt(t); c.setAttribute(&#x27;cx&#x27;,p[0]); c.setAttribute(&#x27;cy&#x27;,p[1]);
+          c.setAttribute(&#x27;class&#x27;, failed &amp;&amp; (i % 4 === 0) ? &#x27;packet blocked&#x27; : &#x27;packet&#x27;);
+        });
+        animationId = requestAnimationFrame(animate);
+      }
+
+      load.addEventListener(&#x27;input&#x27;,update);
+      autoScale.addEventListener(&#x27;change&#x27;,update);
+      failure.addEventListener(&#x27;click&#x27;,() =&gt; { failed = !failed; update(); });
+      update();
+      if (!matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;).matches) animationId = requestAnimationFrame(animate);
+      window.addEventListener(&#x27;pagehide&#x27;, () =&gt; cancelAnimationFrame(animationId), {once:true});
+    })();
+  &lt;/script&gt;
+&lt;/div&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>
